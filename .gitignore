@@ -1,0 +1,26 @@
+## Build generated
+build/
+DerivedData/
+# CocoaPods
+Pods
+!Podfile
+!Podfile.lock
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xcodeproj/**/xcuserdata/
+*.xcscmblueprint
+.DS_Store
+
+# Swift Package Manager
+.build/
+
+# Firebase
+holi/GoogleService-Info.plist
