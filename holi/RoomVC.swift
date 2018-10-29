@@ -55,7 +55,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         if let bg = room?.background {
             isBG = true
             let url = URL(string: bg)
-            bgImg.kf.setImage(with: url)
+            bgImg.sd_setImage(with: url, completed: nil)
             self.view.addSubview(bgImg)
         }
         
@@ -176,7 +176,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
                 guard let path = NSIndexPath(row: offset, section: 0) as? IndexPath else {return}
                 guard let _ = self.table.cellForRow(at: path) as? MsgCell else {return}
                 self.data[offset] = msg
-                print("CHG \(msg.user): \(msg.content)")
+                print(String(describing: "CHG \(String(describing: msg.user)): \(String(describing: msg.content))"))
             } catch let error {
                 print("firebase error \(error)")
             }

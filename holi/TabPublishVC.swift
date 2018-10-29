@@ -33,23 +33,27 @@ class TabPublishVC : TabBaseVC, UITableViewDelegate, UITableViewDataSource {
         // Load Data
         firstly {
             Helper.getServerTime()
-        }.then { now in
-            self.loadData(now, Helper.getLocale())
-        }.done { docs in
-            for (idx, doc) in docs.enumerated() {
-                let room:Room = Room(doc.key!, doc.name)
-                let indexPath = IndexPath.init(row: idx, section: 0)
-                self.docs.append(room)
-                firstly {
-                    Helper.getRoom(roomId: doc.key!)
-                } .done { room in
-                    self.docs[indexPath.row] = room
-                    if let cell = self.table?.cellForRow(at: indexPath) as? RoomCell {
-                        cell.room = room
+            }.then { now in
+                self.loadData(now, Helper.getLocale())
+            }.done { docs in
+                for (idx, doc) in docs.enumerated() {
+                    let room:Room = Room(doc.key!, doc.name)
+                    let indexPath = IndexPath.init(row: idx, section: 0)
+                    self.docs.append(room)
+                    firstly {
+                        Helper.getRoom(roomId: doc.key!)
+                        } .done { room in
+                            self.docs[indexPath.row] = room
+                            if let cell = self.table?.cellForRow(at: indexPath) as? RoomCell {
+                                cell.room = room
+                            }
+                        }.catch { error in
+                            print("Error \(error)")
                     }
                 }
-            }
-            self.table!.reloadData()
+                self.table!.reloadData()
+            }.catch { err in
+                print("Error \(err)")
         }
     }
     
@@ -100,7 +104,7 @@ class TabPublishVC : TabBaseVC, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let roomVC = RoomVC()
         roomVC.room = self.docs[indexPath.row]
-//        self.navigationController?.pushViewController(roomVC, animated: true)
+        //        self.navigationController?.pushViewController(roomVC, animated: true)
         
         let nav = UINavigationController(rootViewController: roomVC)
         self.present(nav, animated: true, completion: nil)

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Kingfisher
 import InitialsImageView
 import MarqueeLabel
 
@@ -92,46 +91,6 @@ class RoomCell: UITableViewCell {
         ele.numberOfLines = 0
         return ele
     }()
-    
-//    private let stPrivate: UILabel = {
-//        let ele = UILabel()
-//        ele.textColor = .gray
-//        ele.font = UIFont.systemFont(ofSize: 12)
-//        ele.textAlignment = .left
-//        ele.text = NSLocalizedString("ST_PRIVATE", comment: "")
-//        ele.numberOfLines = 0
-//        return ele
-//    }()
-//
-//    private let stNoIn: UILabel = {
-//        let ele = UILabel()
-//        ele.textColor = .gray
-//        ele.font = UIFont.systemFont(ofSize: 12)
-//        ele.textAlignment = .left
-//        ele.text = NSLocalizedString("ST_DENY_IN", comment: "")
-//        ele.numberOfLines = 0
-//        return ele
-//    }()
-//
-//    private let stPublish: UILabel = {
-//        let ele = UILabel()
-//        ele.textColor = .gray
-//        ele.font = UIFont.systemFont(ofSize: 12)
-//        ele.textAlignment = .left
-//        ele.text = NSLocalizedString("ST_PUBLISH", comment: "")
-//        ele.numberOfLines = 0
-//        return ele
-//    }()
-//
-//    private let stSilence: UILabel = {
-//        let ele = UILabel()
-//        ele.textColor = .gray
-//        ele.font = UIFont.systemFont(ofSize: 12)
-//        ele.textAlignment = .left
-//        ele.text = NSLocalizedString("ST_SLIENCE", comment: "")
-//        ele.numberOfLines = 0
-//        return ele
-//    }()
     
     private let roomAvatar: UIImageView = {
         let ele = UIImageView(frame: CGRect(x:0, y:0, width: 50, height:50))

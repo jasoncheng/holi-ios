@@ -68,9 +68,11 @@ class Helper {
                     
                     firstly {
                         getUser(userId)
-                        } .done { user in
+                        }.done { user in
                             room.avatar = user.avatar
                             seal.resolve(room, nil)
+                        }.catch { error in
+                            print("Error \(error)")
                     }
                 } catch let err {
                     print("getRoom error \(roomId): \(err)")

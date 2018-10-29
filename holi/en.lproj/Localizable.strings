@@ -11,6 +11,6 @@
 "TabRecommend" = "Recommend";
 "RoomState" = " %@ uesrs, %@ online";
 "READ_COUNT" = "%@ read";
-"LEAVE_ROOM" = "leave room"
-"JOIN_ROOM" = "join room"
-"CREATE_ROOM" = "create room"
+"LEAVE_ROOM" = "leave room";
+"JOIN_ROOM" = "join room";
+"CREATE_ROOM" = "create room";

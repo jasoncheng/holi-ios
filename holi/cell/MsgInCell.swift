@@ -6,7 +6,6 @@
 //  Copyright © 2018 HOLI CHAT. All rights reserved.
 //
 import UIKit
-import Kingfisher
 import PromiseKit
 
 class MsgInCell: MsgCell {
@@ -59,6 +58,8 @@ class MsgInCell: MsgCell {
                     self.userRoomAvatar = avatar
                     self.loadAvatar()
                 }
+            }.catch { error in
+                    print("Error \(error)")
             }
         }
         
@@ -71,9 +72,9 @@ class MsgInCell: MsgCell {
     }
     
     private func loadAvatar(){
-        print("------> load avatar \(userRoomAvatar)")
+        print("------> load avatar \(String(describing: userRoomAvatar))")
         let url = URL(string: userRoomAvatar!)
-        avatar.kf.setImage(with: url)
+        avatar.sd_setImage(with: url, completed: nil)
         avatar.circle(borderColor: UIColor.red, strokeWidth: 2)
     }
 }
