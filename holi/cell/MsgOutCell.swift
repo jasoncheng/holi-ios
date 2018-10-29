@@ -17,14 +17,14 @@ class MsgOutCell: MsgCell {
     
     override func doLayout() {
         if type == .TEXT {
-            doLayoutBubbleText()
-            doLayoutMessageTime()
             doLayoutRead()
         } else if type == .STICKER {
             doLayoutSticker()
-            doLayoutMessageTime()
-            doLayoutRead()
+        } else if type == .PHOTO {
+            doLayoutPhoto()
         }
+        doLayoutMessageTime()
+        doLayoutRead()
         super.doLayout()
     }
 }

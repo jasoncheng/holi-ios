@@ -5,24 +5,26 @@
 //  Created by jasoncheng on 2018/10/25.
 //  Copyright © 2018 HOLI CHAT. All rights reserved.
 //
-
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import CodableFirebase
 import ReverseExtension
+import PullToRefreshKit
 
 class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     let cellId: String = "Cell"
-    let listenNumOfLastMsg: Int = 25
     var isBG: Bool = false
     var refRoom: DatabaseReference?
     var refMsg: DatabaseReference?
     var data = [Msg]()
+    var msgBinded = false
+    var loadingMore = false
     
     var room: Room? {
         didSet {
+            print("----------_> WATCH Room didSet \(room)")
             if ifUserBeenBlock() {
                 print("========> user been block!!!!!")
                 showToast("blocked")
@@ -64,10 +66,21 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         self.view.addSubview(inputTxt)
         
         // Chat Area
+        let footer = DefaultRefreshFooter.footer()
+        let refreshing = NSLocalizedString("LOAD_MORE", comment: "")
+        footer.setText(refreshing, mode: .pullToRefresh)
+        footer.setText(refreshing, mode: .refreshing)
+        footer.transform = CGAffineTransform(scaleX: 1, y: -1)
+        
         table.dataSource = self
         table.register(MsgCell.self, forCellReuseIdentifier: cellId)
         table.delegate = self
         table.transform = CGAffineTransform(scaleX: 1, y: -1)
+        table.configRefreshFooter(with: footer, container: self){ [weak self] in
+            guard let vc = self else {return}
+            vc.loadMore()
+            print("=======> refresh.......")
+        }
         self.view.addSubview(table)
     }
     
@@ -107,6 +120,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
             guard let value = snapshot.value else {return}
             do {
                 self.room = try FirebaseDecoder().decode(Room.self, from: value)
+                self.room?.key = snapshot.key
             } catch let error {
                 print("firebase error \(error)")
             }
@@ -119,9 +133,59 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         }
     }
     
+    func loadMore() {
+        if loadingMore {
+            return
+        }
+        
+        if !msgBinded {
+            self.table.switchRefreshFooter(to: .normal)
+            return
+        }
+        
+        self.loadingMore = true
+        guard let roomKey = room?.key else {return}
+        let oldestMsg = data[data.count - 1]
+        print("newMsg-loadMore \(oldestMsg.key)")
+        let query = Database.database().reference().child("msg").child(roomKey).queryOrderedByKey()
+            .queryEnding(atValue: oldestMsg.key)
+            .queryLimited(toLast: UInt(Consts.MESSAGE_MORE_SIZE))
+        query.observeSingleEvent(of: .value, with: { snapshots in
+            let count = snapshots.childrenCount
+            if count == 0 {
+                self.table.switchRefreshFooter(to: .noMoreData)
+                return
+            }
+            
+            var tmp = [Msg]()
+            for snapshot in snapshots.children.allObjects as! [DataSnapshot] {
+                guard let value = snapshot.value else {return}
+                do {
+                    var msg = try FirebaseDecoder().decode(Msg.self, from: value)
+                    msg.key = snapshot.key
+                    self.newMsg(msg, toEnd: true, reload: false)
+                }catch let error{
+                    print("Error \(error)")
+                }
+            }
+            
+            //            tmp.sort(by: { Double($0.createdAt ?? 0) > Double($1.createdAt ?? 0) })
+            //            for doc in tmp {
+            //                self.data.append(doc)
+            //            }
+            
+            self.table.reloadData()
+            self.table.switchRefreshFooter(to: .normal)
+            self.loadingMore = false
+        }, withCancel: { error in
+            self.loadingMore = false
+            print("Error \(error)")
+        })
+    }
+    
     func bindMsg() {
         refMsg = Database.database().reference().child("msg").child((room?.key)!)
-        let query = refMsg?.queryLimited(toLast: UInt(listenNumOfLastMsg))
+        let query = refMsg?.queryLimited(toLast: UInt(Consts.MESSAGE_DYNAMIC_SIZE))
         
         // new message coming
         var counter = 0;
@@ -130,28 +194,16 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
             do {
                 var msg = try FirebaseDecoder().decode(Msg.self, from: value)
                 msg.key = snapshot.key
-                if self.data.contains(msg) {return}
-                
-                // setup msg.hideUserInfo
-                if self.data.count > 0 {
-                    let preMsg = self.data[self.data.count - 1]
-                    if !MsgCell.isAnnouncement(preMsg) {
-                        msg.hideUserInfo = preMsg.user == msg.user
-                    }
-                }
-                
-                //                if counter == 24 {
-                //                    msg.user = "PhAcB9ZDf7YMu8fE2XfGzyBmYHg2"
-                //                }
-                
-                //                self.data.append(msg)
-                self.data.insert(msg, at: 0)
-                self.table.reloadData()
+                self.newMsg(msg, toEnd: false, reload: true)
                 self.scrollToBottom();
                 counter+=1
                 print("ADD \(msg.user ?? ""): \(msg.content ?? "")")
             } catch let error {
                 print("firebase error \(error)")
+            }
+            
+            if !self.msgBinded {
+                self.msgBinded = true
             }
         })
         
@@ -209,13 +261,33 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         return ele
     }()
     
+    // this will control which message is necessary to show user info(avatar+username)
+    func newMsg(_ msg: Msg, toEnd: Bool, reload: Bool) {
+        if self.data.contains(msg) {return}
+        
+        !toEnd ? self.data.insert(msg, at: 0) : self.data.append(msg)
+        
+        var preMsg:Msg?
+        var arr = [Msg]()
+        let sorted = self.data.sorted(by: { Double($0.createdAt ?? 0) > Double($1.createdAt ?? 0) })
+        for var doc in sorted.reversed() {
+            doc.hideUserInfo = preMsg != nil && preMsg?.user == doc.user
+            preMsg = doc
+            arr.append(doc)
+        }
+        
+        self.data = arr.reversed()
+        if reload {
+            table.reloadData()
+        }
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true
     }
     
     func scrollToBottom() {
-        //        let index = NSIndexPath(row: data.count-1, section: 0) as IndexPath
         let index = NSIndexPath(row: 0, section: 0) as IndexPath
         self.table.scrollToRow(at: index, at: UITableView.ScrollPosition.bottom, animated: false)
     }
@@ -247,6 +319,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         // priority first: set up user info from room
         if let user_name = room?.names?[msg.user!] ?? msg.username {
             cell.userRoomName = user_name
+            print("LoadMsgData with \(indexPath.row) \(cell.userRoomName)")
         }
         
         guard let user_avatar = room?.hideProfile?[msg.user!] else {
@@ -257,7 +330,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         if !user_avatar.isEmpty {
             cell.userRoomAvatar = user_avatar
         }
-        
+        cell.tag = indexPath.row
         cell.msg = msg
         return cell
     }

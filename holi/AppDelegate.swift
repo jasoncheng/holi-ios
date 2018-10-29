@@ -39,16 +39,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // User Process
         let user = Auth.auth().currentUser
         if let user = user {
-//            let userid = user.uid
-//            let username = user.displayName
-//            let useremail = user.email
             print("=========> welcome user \(user.uid)")
         } else {
             Auth.auth().signInAnonymously{(user, error) in
                 if error != nil {
                     print("Error \(String(describing: error))")
                 } else {
-                    print(user)
+                    print("Welcome announce \(String(describing: user))")
                 }
             }
         }

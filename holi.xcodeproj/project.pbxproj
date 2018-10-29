@@ -31,6 +31,7 @@
 		BE948676217E158B00729A3C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE948675217E158B00729A3C /* User.swift */; };
 		BE94867C217E291800729A3C /* RoomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE94867B217E291800729A3C /* RoomCell.swift */; };
 		BE94867E217F17AA00729A3C /* UserAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE94867D217F17AA00729A3C /* UserAvatar.swift */; };
+		BEBEB13D2186DC9B00AE7C02 /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBEB13C2186DC9B00AE7C02 /* Consts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		BE948675217E158B00729A3C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BE94867B217E291800729A3C /* RoomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCell.swift; sourceTree = "<group>"; };
 		BE94867D217F17AA00729A3C /* UserAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatar.swift; sourceTree = "<group>"; };
+		BEBEB13C2186DC9B00AE7C02 /* Consts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 		ED0C13437D4FE098EE1AE79A /* Pods-holi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-holi.release.xcconfig"; path = "Pods/Target Support Files/Pods-holi/Pods-holi.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -138,6 +140,7 @@
 				BE948675217E158B00729A3C /* User.swift */,
 				BE94867D217F17AA00729A3C /* UserAvatar.swift */,
 				BE3F4FCB21835D4300CA7532 /* Msg.swift */,
+				BEBEB13C2186DC9B00AE7C02 /* Consts.swift */,
 			);
 			path = bean;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/PullToRefreshKit/PullToRefreshKit.framework",
 				"${BUILT_PRODUCTS_DIR}/ReverseExtension/ReverseExtension.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -289,6 +293,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PullToRefreshKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReverseExtension.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -307,6 +312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE1B9189217AE47500185230 /* TabBaseVC.swift in Sources */,
+				BEBEB13D2186DC9B00AE7C02 /* Consts.swift in Sources */,
 				BE3CC3D52180D00A00824096 /* RoomVC.swift in Sources */,
 				BE1B918B217AE4BB00185230 /* TabMyVC.swift in Sources */,
 				BE94866B217C8A6A00729A3C /* Room.swift in Sources */,

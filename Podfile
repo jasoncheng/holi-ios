@@ -20,4 +20,5 @@ target 'holi' do
   pod 'SDWebImage', '~> 4.0'
   pod 'SDWebImage/GIF'
   pod 'ReverseExtension', :git => 'https://github.com/mota-raven/ReverseExtension.git'
+  pod 'PullToRefreshKit'
 end

@@ -22,13 +22,13 @@ class MsgInCell: MsgCell {
         doLayoutUserBox()
         if type == .TEXT {
             doLayoutBubbleText()
-            doLayoutMessageTime()
-            doLayoutRead()
         } else if type == .STICKER {
             doLayoutSticker()
-            doLayoutMessageTime()
-            doLayoutRead()
+        } else if type == .PHOTO {
+            doLayoutPhoto()
         }
+        doLayoutMessageTime()
+        doLayoutRead()
         super.doLayout()
     }
     
@@ -45,6 +45,7 @@ class MsgInCell: MsgCell {
         }
         
         username.text = userRoomName
+        print("SAY: \(self.tag) \(msg?.key), \(userRoomName): \(msg?.content)")
         let label = "\(userRoomName!.getCharAtIndex(0))"
         avatar.setImageForName(label, backgroundColor: nil, circular: true, textAttributes: nil)
         avatar.circle(borderColor: UIColor.red, strokeWidth: 2)

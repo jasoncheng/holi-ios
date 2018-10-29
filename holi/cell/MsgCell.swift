@@ -49,6 +49,12 @@ class MsgCell: UITableViewCell {
         }
     }
     
+    func getIndexPathFor(view: UIView, tableView: UITableView) -> IndexPath? {
+        let point = tableView.convert(view.bounds.origin, from: view)
+        let indexPath = tableView.indexPathForRow(at: point)
+        return indexPath
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
@@ -156,6 +162,18 @@ class MsgCell: UITableViewCell {
         } else {
             view.anchor(top: topAnchor, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 10, paddingRight: 10, width: width, height: height, enableInsets: false)
         }
+    }
+    
+    func doLayoutPhoto(){
+        print("IMAGE ======> \(String(describing: msg?.mediaUrl))")
+        let f = CGRect(x: 0, y: 0, width: frame.size.width * 0.68, height: frame.size.width * 0.68)
+        let url = URL(string: (msg?.mediaUrl)!)
+        
+        let img = FLAnimatedImageView(frame: f)
+        img.sd_setImage(with: url, completed: nil)
+        addSubview(img)
+        viewContent = img
+        viewContentLayout()
     }
     
     func doLayoutSticker(){
