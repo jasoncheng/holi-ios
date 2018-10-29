@@ -15,3 +15,5 @@
 "JOIN_ROOM" = "join room";
 "CREATE_ROOM" = "create room";
 "LOAD_MORE" = "loading more";
+"today" = "Today";
+"yesterday" = "Yesterday";

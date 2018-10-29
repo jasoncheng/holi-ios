@@ -40,8 +40,21 @@ class MsgAnnouncement: MsgCell {
     }()
     
     override func doLayout() {
-        contentText.text = msg?.announcement
-        contentTime.text = msg?.createdAt?.toDateTime()
+        let msgOut = Helper.getAnnouncementFormatString(content: msg?.announcement ?? "")
+        if msgOut.isEmpty {
+            return
+        }
+        
+        if msg?.key == nil && msg?.content != nil {
+            contentTxt.text = ""
+            contentTime.text = NSLocalizedString((msg?.content)!, comment: (msg?.content)!)
+            contentTime.font = UIFont.boldSystemFont(ofSize: 14)
+            stackView.addBackground(color: UIColor(rgb: 0x333333))
+        } else if let username = userRoomName {
+            contentText.text = "\(username) \(msgOut)"
+            contentTime.text = msg?.createdAt?.toDateTime()
+        }
+        
         stackView.addArrangedSubview(contentText)
         stackView.addArrangedSubview(contentTime)
         addSubview(stackView)
@@ -57,8 +70,8 @@ class MsgAnnouncement: MsgCell {
                                                          options: .usesLineFragmentOrigin,
                                                          attributes: [.font: contentTime.font],
                                                          context: nil)
-        let txtSize = CGSize(width: ceil((boundingBox?.width)!),
-                             height: ceil((boundingBox?.height)!))
+        let txtSize = CGSize(width: ceil(boundingBox?.width ?? 0),
+                             height: ceil(boundingBox?.height ?? 0))
         
         let timeSize = CGSize(width: ceil((boundingBoxTime?.width)!),
                              height: ceil((boundingBoxTime?.height)!))

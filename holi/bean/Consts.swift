@@ -7,6 +7,6 @@
 //
 
 class Consts {
-    static let MESSAGE_DYNAMIC_SIZE = 15
+    static let MESSAGE_DYNAMIC_SIZE = 10
     static let MESSAGE_MORE_SIZE = 20
 }

@@ -24,7 +24,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
     
     var room: Room? {
         didSet {
-            print("----------_> WATCH Room didSet \(room)")
+            print("----------_> WATCH Room didSet \(String(describing: room))")
             if ifUserBeenBlock() {
                 print("========> user been block!!!!!")
                 showToast("blocked")
@@ -133,6 +133,16 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         }
     }
     
+    func getOldestMsgKey() -> String {
+        var key: String?
+        for doc in self.data {
+            if doc.key != nil {
+                key = doc.key
+            }
+        }
+        return key!
+    }
+    
     func loadMore() {
         if loadingMore {
             return
@@ -145,10 +155,8 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         
         self.loadingMore = true
         guard let roomKey = room?.key else {return}
-        let oldestMsg = data[data.count - 1]
-        print("newMsg-loadMore \(oldestMsg.key)")
         let query = Database.database().reference().child("msg").child(roomKey).queryOrderedByKey()
-            .queryEnding(atValue: oldestMsg.key)
+            .queryEnding(atValue: getOldestMsgKey())
             .queryLimited(toLast: UInt(Consts.MESSAGE_MORE_SIZE))
         query.observeSingleEvent(of: .value, with: { snapshots in
             let count = snapshots.childrenCount
@@ -157,7 +165,6 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
                 return
             }
             
-            var tmp = [Msg]()
             for snapshot in snapshots.children.allObjects as! [DataSnapshot] {
                 guard let value = snapshot.value else {return}
                 do {
@@ -169,10 +176,6 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
                 }
             }
             
-            //            tmp.sort(by: { Double($0.createdAt ?? 0) > Double($1.createdAt ?? 0) })
-            //            for doc in tmp {
-            //                self.data.append(doc)
-            //            }
             
             self.table.reloadData()
             self.table.switchRefreshFooter(to: .normal)
@@ -261,19 +264,44 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         return ele
     }()
     
-    // this will control which message is necessary to show user info(avatar+username)
+    // some util for:
+    // 1. this will control which message is necessary to show user info(avatar+username)
+    // 2. show Date Announcement (2018-10-24 / Yesterday / Today)
     func newMsg(_ msg: Msg, toEnd: Bool, reload: Bool) {
         if self.data.contains(msg) {return}
         
+        let todayE = (NSDate().timeIntervalSince1970 * 1000)
+        let yesterday = (todayE - 86400000).toDate()
+        let today = todayE.toDate()
         !toEnd ? self.data.insert(msg, at: 0) : self.data.append(msg)
         
         var preMsg:Msg?
         var arr = [Msg]()
+        var dayDict = [String: String]()
         let sorted = self.data.sorted(by: { Double($0.createdAt ?? 0) > Double($1.createdAt ?? 0) })
         for var doc in sorted.reversed() {
-            doc.hideUserInfo = preMsg != nil && preMsg?.user == doc.user
+            guard let _ = doc.key else {continue}
+            
+            doc.hideUserInfo = preMsg != nil && preMsg?.user == doc.user && !MsgCell.isAnnouncement(preMsg!)
             preMsg = doc
             arr.append(doc)
+            
+            // process day
+            guard let thisDay = doc.createdAt?.toDate() else {continue}
+            if !dayDict.keys.contains(thisDay) {
+                dayDict[thisDay] = "-"
+                var fakeMsg = Msg()
+                fakeMsg.announcement = "date"
+                fakeMsg.createdAt = doc.createdAt
+                if today == thisDay {
+                    fakeMsg.content = "today"
+                } else if yesterday == thisDay {
+                    fakeMsg.content = "yesterday"
+                } else {
+                     fakeMsg.content = thisDay
+                }
+                arr.insert(fakeMsg, at: arr.count-1 > 0 ? arr.count - 1 : 0)
+            }
         }
         
         self.data = arr.reversed()
@@ -314,6 +342,12 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
             cell = MsgInCell(frame: defaultFrame)
         } else {
             cell = MsgOutCell(frame: defaultFrame)
+        }
+        
+        // if fake message (announcement date)
+        if msg.key == nil && msg.announcement != nil && msg.announcement == "date" {
+            cell.msg = msg
+            return cell
         }
         
         // priority first: set up user info from room

@@ -45,7 +45,6 @@ class MsgInCell: MsgCell {
         }
         
         username.text = userRoomName
-        print("SAY: \(self.tag) \(msg?.key), \(userRoomName): \(msg?.content)")
         let label = "\(userRoomName!.getCharAtIndex(0))"
         avatar.setImageForName(label, backgroundColor: nil, circular: true, textAttributes: nil)
         avatar.circle(borderColor: UIColor.red, strokeWidth: 2)

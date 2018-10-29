@@ -9,8 +9,8 @@
 import UIKit
 
 extension String {
-    func getCharAtIndex(_ index: Int) -> Character {
-        return self[self.index(self.startIndex, offsetBy: index)]
+    func getCharAtIndex(_ index: Int) -> String {
+        return String(self[self.index(self.startIndex, offsetBy: index)])
     }
 }
 
@@ -168,29 +168,25 @@ extension UITableViewCell {
     }
 }
 
+
 extension Double {
     func toTime() -> String {
-        let date = parseDateFromTimestamp(self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = NSLocale.current
-        dateFormatter.dateFormat = "HH:mm"
-        return dateFormatter.string(from: date as Date)
+        return getDateFormater("HH:mm").string(from: parseDateFromTimestamp(self) as Date)
     }
     
     func toDateTime() -> String {
-        let date = parseDateFromTimestamp(self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone.current
-        dateFormatter.locale = NSLocale.current
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return dateFormatter.string(from: date as Date)
+        return getDateFormater("yyyy-MM-dd HH:mm:ss").string(from: parseDateFromTimestamp(self) as Date)
+    }
+    
+    func toDate() -> String {
+        return getDateFormater("yyyy-MM-dd").string(from: parseDateFromTimestamp(self) as Date)
     }
 }
 
 extension UIStackView {
     
     func addBackground(color: UIColor) {
-        color.withAlphaComponent(0.1)
+        color.withAlphaComponent(0.8)
         let subview = UIView(frame: bounds)
         subview.backgroundColor = color
         subview.layer.cornerRadius = 12
@@ -198,6 +194,20 @@ extension UIStackView {
         insertSubview(subview, at: 0)
     }
     
+}
+
+extension Date {
+    var yesterday: Double {
+        return (Calendar.current.date(byAdding: .day, value: -1, to: Date())?.timeIntervalSince1970)!
+    }
+}
+
+func getDateFormater(_ format: String) -> DateFormatter {
+    let dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone.current
+    dateFormatter.locale = NSLocale.current
+    dateFormatter.dateFormat = format
+    return dateFormatter
 }
 
 func parseDateFromTimestamp(_ timestampIntInMsec:Double) -> NSDate {

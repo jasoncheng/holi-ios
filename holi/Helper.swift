@@ -16,6 +16,7 @@ class Helper {
         case JOIN_ROOM = "_|_rj_|_"
         case CREATE_ROOM = "_|_rc_|_"
         case LEAVE_ROOM = "_|_rl_|_"
+        case DATE = "date"
         case UNKNOW = "??"
     }
     
@@ -33,7 +34,8 @@ class Helper {
         case .JOIN_ROOM?: return NSLocalizedString("JOIN_ROOM", comment: "")
         case .CREATE_ROOM?: return NSLocalizedString("CREATE_ROOM", comment: "")
         case .LEAVE_ROOM?: return NSLocalizedString("LEAVE_ROOM", comment: "")
-        default: return "unknow"
+        case .DATE?: return "date"
+        default: return ""
         }
     }
     
