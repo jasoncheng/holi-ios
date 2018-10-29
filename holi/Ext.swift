@@ -12,6 +12,16 @@ extension String {
     func getCharAtIndex(_ index: Int) -> String {
         return String(self[self.index(self.startIndex, offsetBy: index)])
     }
+    
+    func urlEncoded() -> String {
+        let encodeUrlString = self.addingPercentEncoding(withAllowedCharacters:
+            .urlQueryAllowed)
+        return encodeUrlString ?? ""
+    }
+    
+    func urlDecoded() -> String {
+        return self.removingPercentEncoding ?? ""
+    }
 }
 
 

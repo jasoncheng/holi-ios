@@ -73,8 +73,8 @@ class MsgAnnouncement: MsgCell {
         let txtSize = CGSize(width: ceil(boundingBox?.width ?? 0),
                              height: ceil(boundingBox?.height ?? 0))
         
-        let timeSize = CGSize(width: ceil((boundingBoxTime?.width)!),
-                             height: ceil((boundingBoxTime?.height)!))
+        let timeSize = CGSize(width: ceil(boundingBoxTime?.width ?? 0),
+                             height: ceil(boundingBoxTime?.height ?? 0))
         
         let totalWidth = txtSize.width > timeSize.width ? txtSize.width+20 : timeSize.width+20
         let totalHeight = txtSize.height + timeSize.height + 10

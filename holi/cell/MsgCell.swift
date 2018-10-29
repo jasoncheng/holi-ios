@@ -165,24 +165,34 @@ class MsgCell: UITableViewCell {
     }
     
     func doLayoutPhoto(){
-        print("IMAGE ======> \(String(describing: msg?.mediaUrl))")
+        guard let tmpStr = msg?.mediaUrl else {return}
+        let ar = tmpStr.components(separatedBy: "#")
+        let _url = ar[0].urlEncoded()
+        
+        print("IMAGE ======> \(String(describing: _url))")
+        let url = URL(string: _url)
         let f = CGRect(x: 0, y: 0, width: frame.size.width * 0.68, height: frame.size.width * 0.68)
-        let url = URL(string: (msg?.mediaUrl)!)
         
         let img = FLAnimatedImageView(frame: f)
-        img.sd_setImage(with: url, completed: nil)
+        img.sd_setImage(with: url, placeholderImage: nil, options: [.allowInvalidSSLCertificates], completed: nil)
+//        img.sd_setImage(with: url, completed: nil)
         addSubview(img)
         viewContent = img
         viewContentLayout()
     }
     
     func doLayoutSticker(){
-        print("IMAGE ======> \(String(describing: msg?.sticker))")
+        guard let tmpStr = msg?.sticker else {return}
+        let ar = tmpStr.components(separatedBy: "#")
+        let _url = ar[0].urlEncoded()
+        
+        print("IMAGE ======> \(String(describing: _url))")
         let f = CGRect(x: 0, y: 0, width: frame.size.width * 0.68, height: frame.size.width * 0.68)
-        let url = URL(string: (msg?.sticker)!)
+        let url = URL(string: _url)
         
         let img = FLAnimatedImageView(frame: f)
-        img.sd_setImage(with: url, completed: nil)
+        img.sd_setImage(with: url, placeholderImage: nil, options: [.allowInvalidSSLCertificates], completed: nil)
+//        img.sd_setImage(with: url, completed: nil)
         addSubview(img)
         viewContent = img
         viewContentLayout()

@@ -21,6 +21,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
     var data = [Msg]()
     var msgBinded = false
     var loadingMore = false
+    var noMore = false
     
     var room: Room? {
         didSet {
@@ -70,6 +71,7 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         let refreshing = NSLocalizedString("LOAD_MORE", comment: "")
         footer.setText(refreshing, mode: .pullToRefresh)
         footer.setText(refreshing, mode: .refreshing)
+        footer.setText("", mode: .noMoreData)
         footer.transform = CGAffineTransform(scaleX: 1, y: -1)
         
         table.dataSource = self
@@ -144,7 +146,13 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
     }
     
     func loadMore() {
+        if noMore {
+            self.table.switchRefreshFooter(to: .noMoreData)
+            return
+        }
+        
         if loadingMore {
+            self.table.switchRefreshFooter(to: .normal)
             return
         }
         
@@ -160,7 +168,8 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
             .queryLimited(toLast: UInt(Consts.MESSAGE_MORE_SIZE))
         query.observeSingleEvent(of: .value, with: { snapshots in
             let count = snapshots.childrenCount
-            if count == 0 {
+            if count == 0 || count < Consts.MESSAGE_MORE_SIZE {
+                self.noMore = true
                 self.table.switchRefreshFooter(to: .noMoreData)
                 return
             }
