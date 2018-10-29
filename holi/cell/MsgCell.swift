@@ -112,9 +112,14 @@ class MsgCell: UITableViewCell {
         return bubbleView
     }
     
-    var contentTxt: UILabel = {
-        let label =  UILabel()
-        label.numberOfLines = 0
+    var contentTxt: UITextView = {
+        let label =  UITextView()
+        label.isEditable = false
+        label.dataDetectorTypes = UIDataDetectorTypes.all;
+        label.backgroundColor = .clear
+        label.textContainerInset = .zero
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+//        label.numberOfLines = 0
         return label
     }()
     
@@ -122,8 +127,8 @@ class MsgCell: UITableViewCell {
     
     func bubbleTxt(isIncoming: Bool, text: String) -> UIView {
         viewContent = isIncoming ? inComingBubbule() : outGoingBubble()
-        let label =  UILabel()
-        label.numberOfLines = 0
+        let label =  UITextView()
+//        label.numberOfLines = 0
         label.textColor = .white
         label.text = text
         
@@ -131,7 +136,7 @@ class MsgCell: UITableViewCell {
                                     height: .greatestFiniteMagnitude)
         let boundingBox = text.boundingRect(with: constraintRect,
                                             options: .usesLineFragmentOrigin,
-                                            attributes: [.font: label.font],
+                                            attributes: [.font: contentTxt.font],
                                             context: nil)
         label.frame.size = CGSize(width: ceil(boundingBox.width),
                                   height: ceil(boundingBox.height))
@@ -175,7 +180,6 @@ class MsgCell: UITableViewCell {
         
         let img = FLAnimatedImageView(frame: f)
         img.sd_setImage(with: url, placeholderImage: nil, options: [.allowInvalidSSLCertificates], completed: nil)
-//        img.sd_setImage(with: url, completed: nil)
         addSubview(img)
         viewContent = img
         viewContentLayout()
@@ -192,7 +196,6 @@ class MsgCell: UITableViewCell {
         
         let img = FLAnimatedImageView(frame: f)
         img.sd_setImage(with: url, placeholderImage: nil, options: [.allowInvalidSSLCertificates], completed: nil)
-//        img.sd_setImage(with: url, completed: nil)
         addSubview(img)
         viewContent = img
         viewContentLayout()
