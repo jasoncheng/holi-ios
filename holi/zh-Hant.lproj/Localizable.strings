@@ -5,3 +5,12 @@
   Created by jasoncheng on 2018/10/22.
   Copyright © 2018 HOLI CHAT. All rights reserved.
 */
+"AppName" = "HOLI";
+"TabMy" = "自己的";
+"TabPublish" = "推廣中";
+"TabRecommend" = "建議的";
+"RoomState" = " %@ 位成員, %@ 人在線";
+"READ_COUNT" = "已讀%@";
+"LEAVE_ROOM" = "離開聊天室"
+"JOIN_ROOM" = "加入聊天室"
+"CREATE_ROOM" = "建立聊天室"

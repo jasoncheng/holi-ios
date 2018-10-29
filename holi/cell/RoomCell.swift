@@ -33,23 +33,23 @@ class RoomCell: UITableViewCell {
             }
             
             // private chat room
-            if let privateMode = room?.privateMode {
+            if let _ = room?.privateMode {
             }
             
             // user cannot speak
-            if let silence = room?.mute {
+            if let _ = room?.mute {
             }
             
             // user cannot join
-            if let rejectAll = room?.rejectAll {
+            if let _ = room?.rejectAll {
             }
             
             // room is boradcasting
-            if let publish = room?.publishTTL {
+            if let _ = room?.publishTTL {
             }
             
             // room is require password for join
-            if let requirePS = room?.requirePS {
+            if let _ = room?.requirePS {
             }
             
             // room avatar
@@ -61,7 +61,7 @@ class RoomCell: UITableViewCell {
                 return
             }
             
-            print("\(room?.name) - \(avatarUrl)")
+            print("\(String(describing: room?.name)) - \(avatarUrl)")
             setAvatar(avatarLabel, avatar_url:avatarUrl)
         }
     }
@@ -69,7 +69,7 @@ class RoomCell: UITableViewCell {
     func setAvatar(_ room_firstname:String, avatar_url:String?="") {
         if avatar_url != nil && !avatar_url!.isEmpty {
             let url = URL(string: avatar_url!)
-            roomAvatar.kf.setImage(with: url)
+            roomAvatar.sd_setImage(with: url, completed: nil)
         } else {
             roomAvatar.setImageForName(room_firstname, backgroundColor: nil, circular: true, textAttributes: nil)
         }

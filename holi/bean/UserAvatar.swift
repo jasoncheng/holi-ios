@@ -6,4 +6,8 @@
 //  Copyright © 2018 HOLI CHAT. All rights reserved.
 //
 
-import Foundation
+struct UserAvatar: Codable {
+    var createdAt: Double?
+    var path: String?
+    var url: String?
+}

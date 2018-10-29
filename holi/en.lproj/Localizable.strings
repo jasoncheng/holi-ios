@@ -5,3 +5,12 @@
   Created by jasoncheng on 2018/10/22.
   Copyright © 2018 HOLI CHAT. All rights reserved.
 */
+"AppName" = "HOLI";
+"TabMy" = "My";
+"TabPublish" = "Publish";
+"TabRecommend" = "Recommend";
+"RoomState" = " %@ uesrs, %@ online";
+"READ_COUNT" = "%@ read";
+"LEAVE_ROOM" = "leave room"
+"JOIN_ROOM" = "join room"
+"CREATE_ROOM" = "create room"
