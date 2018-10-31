@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import Cache
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         // Firebase
         FirebaseApp.configure()
         
@@ -49,6 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
+        
         return true
     }
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Cache
 
 extension String {
     func getCharAtIndex(_ index: Int) -> String {
@@ -70,13 +71,13 @@ extension UIImageView {
         
         radius /= 2
         
-        var path = UIBezierPath(roundedRect: CGRect().insetBy(dx: strokeWidth/2, dy: strokeWidth/2), cornerRadius: radius)
-        let border = CAShapeLayer()
-        border.fillColor = UIColor.clear.cgColor
-        border.path = path.cgPath
-        border.strokeColor = borderColor.cgColor
-        border.lineWidth = strokeWidth
-        self.layer.addSublayer(border)
+        var path = UIBezierPath(roundedRect: drawingRect.insetBy(dx: strokeWidth/2, dy: strokeWidth/2), cornerRadius: radius)
+//        let border = CAShapeLayer()
+//        border.fillColor = UIColor.clear.cgColor
+//        border.path = path.cgPath
+//        border.strokeColor = borderColor.cgColor
+//        border.lineWidth = strokeWidth
+//        self.layer.addSublayer(border)
         
         path = UIBezierPath(roundedRect: drawingRect, cornerRadius: radius)
         let mask = CAShapeLayer()
@@ -204,6 +205,34 @@ extension UIStackView {
         insertSubview(subview, at: 0)
     }
     
+}
+
+extension MemoryStorage {
+    func getUser(forKey: String) -> User? {
+        do {
+            if try isExpiredObject(forKey: forKey) {
+                removeObject(forKey: forKey)
+                return nil
+            }
+            return try object(forKey: forKey) as? User
+        }catch{
+            print(error)
+            return nil
+        }
+    }
+    
+    func get(forKey: String) -> Codable? {
+        do {
+            if try isExpiredObject(forKey: forKey) {
+                removeObject(forKey: forKey)
+                return nil
+            }
+            return try object(forKey: forKey) as? Codable
+        }catch{
+            print(error)
+            return nil
+        }
+    }
 }
 
 extension Date {

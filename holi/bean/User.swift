@@ -6,6 +6,7 @@
 //  Copyright © 2018 HOLI CHAT. All rights reserved.
 //
 struct User: Codable {
+    var key: String?
     var name: String?
     var about: String?
     var abuse: Bool?

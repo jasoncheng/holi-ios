@@ -79,7 +79,6 @@ class RoomCell: UITableViewCell {
         let bl = MarqueeLabel.init(frame: CGRect(), duration: 14.0, fadeLength: 10.0)
         bl.textColor = .black
         bl.font = UIFont.boldSystemFont(ofSize: 16)
-        bl.textAlignment = .left
         return bl
     }()
     
@@ -126,12 +125,13 @@ class RoomCell: UITableViewCell {
         addSubview(roomInfoBT)
         addSubview(roomName)
         addSubview(roomState)
-        addSubview(stGroup)
         
         roomAvatar.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 10, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 60, height: 0, enableInsets: false)
+        
         roomInfoBT.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 20, paddingLeft: 10, paddingBottom: 20, paddingRight: 10, width: 40, height: 40, enableInsets: false)
+        
         roomName.anchor(top: topAnchor, left: roomAvatar.rightAnchor, bottom: nil, right: roomInfoBT.leftAnchor, paddingTop: 20, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: frame.size.width, height: 0, enableInsets: false)
-        roomState.anchor(top: roomName.bottomAnchor, left: roomAvatar.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: frame.size.width, height: 0, enableInsets: false)
-        stGroup.anchor(top: roomState.bottomAnchor, left: roomAvatar.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: frame.size.width, height: 0, enableInsets: false)
+        
+        roomState.anchor(top: roomName.bottomAnchor, left: roomAvatar.rightAnchor, bottom: nil, right: roomInfoBT.leftAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: frame.size.width, height: 0, enableInsets: false)
     }
 }

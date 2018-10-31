@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import CodableFirebase
 import PromiseKit
+import Cache
 
 class Helper {
     
@@ -19,6 +20,22 @@ class Helper {
         case DATE = "date"
         case UNKNOW = "??"
     }
+    
+    static let memoryCacheUserCfg = {
+        return MemoryConfig(expiry: .seconds(60*3), countLimit: 300, totalCostLimit: 300)
+    }()
+    
+    static let memoryCacheRoomCfg = {
+        return MemoryConfig(expiry: .seconds(60*2), countLimit: 300, totalCostLimit: 300)
+    }()
+    
+    static var memoryStorageUser = {
+        return MemoryStorage<User>(config: memoryCacheUserCfg)
+    }()
+    
+    static var memoryStorageRoom = {
+        return MemoryStorage<Room>(config: memoryCacheRoomCfg)
+    }()
     
     static func getLocale() -> String {
         return String(String(Locale.preferredLanguages[0]).suffix(2));
@@ -58,6 +75,14 @@ class Helper {
     
     static func getRoom(roomId: String) -> Promise<Room> {
         return Promise { seal in
+            
+            let key = "room_\(roomId)"
+            if let room = memoryStorageRoom.get(forKey: key) as? Room {
+                seal.resolve(room, nil)
+                print("cached \(key)")
+                return
+            }
+            
             getRoom(roomId: roomId, complete: { snapshot in
                 guard let value = snapshot.value else { return }
                 do {
@@ -70,11 +95,13 @@ class Helper {
                     
                     firstly {
                         getUser(userId)
-                        }.done { user in
-                            room.avatar = user.avatar
-                            seal.resolve(room, nil)
-                        }.catch { error in
-                            print("Error \(error)")
+                    }.done { user in
+                        room.avatar = user.avatar
+                        seal.resolve(room, nil)
+                        memoryStorageRoom.setObject(room, forKey: key)
+                        print("caching \(key)")
+                    }.catch { error in
+                        print("Error \(error)")
                     }
                 } catch let err {
                     print("getRoom error \(roomId): \(err)")
@@ -85,14 +112,24 @@ class Helper {
     
     static func getUser(_ userId: String, path:String = "user") -> Promise<User> {
         return Promise { seal in
-            print("getUser /\(path)/\(userId)")
+            let key = "user_\(userId)"
+            if let user = memoryStorageUser.get(forKey: key) as? User {
+                seal.resolve(user, nil)
+                print("cached \(key)")
+                return
+            }
+            
             let ref = Database.database().reference().child(path).child(userId)
             ref.observeSingleEvent(of: .value, with: { snapshot in
                 guard let value = snapshot.value else { return }
                 do {
-                    let user = try FirebaseDecoder().decode(User.self, from: value)
+                    var user = try FirebaseDecoder().decode(User.self, from: value)
+                    user.key = snapshot.key
                     seal.resolve(user, nil)
+                    print("caching \(key)")
+                    memoryStorageUser.setObject(user, forKey: key)
                 } catch let err {
+                    print("==========> error happen \(err)")
                     print(err)
                 }
             })

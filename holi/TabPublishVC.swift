@@ -104,8 +104,6 @@ class TabPublishVC : TabBaseVC, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let roomVC = RoomVC()
         roomVC.room = self.docs[indexPath.row]
-        //        self.navigationController?.pushViewController(roomVC, animated: true)
-        
         let nav = UINavigationController(rootViewController: roomVC)
         self.present(nav, animated: true, completion: nil)
     }

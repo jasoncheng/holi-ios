@@ -247,7 +247,6 @@ class MsgCell: UITableViewCell {
     
     // after all layout, start layout message time
     func doLayout(){
-        print("doLayout parent: ")
         self.transform = CGAffineTransform(scaleX: 1, y: -1)
     }
 }

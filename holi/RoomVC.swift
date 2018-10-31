@@ -25,7 +25,6 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
     
     var room: Room? {
         didSet {
-            print("----------_> WATCH Room didSet \(String(describing: room))")
             if ifUserBeenBlock() {
                 print("========> user been block!!!!!")
                 showToast("blocked")
@@ -362,7 +361,6 @@ class RoomVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITabl
         // priority first: set up user info from room
         if let user_name = room?.names?[msg.user!] ?? msg.username {
             cell.userRoomName = user_name
-            print("LoadMsgData with \(indexPath.row) \(cell.userRoomName)")
         }
         
         guard let user_avatar = room?.hideProfile?[msg.user!] else {
