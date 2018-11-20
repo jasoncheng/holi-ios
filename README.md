@@ -30,3 +30,7 @@ Be aware, once you delete HOLI chat room, all chat messages will desotry at the 
 > Android [Google Play Store](https://play.google.com/store/apps/details?id=tw.jasoncheng.holi)
 
 > iOS coming soon......
+
+***LINKS***
+
+* [HOLI.CHAT](https://holi.chat)
