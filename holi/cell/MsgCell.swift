@@ -136,7 +136,7 @@ class MsgCell: UITableViewCell {
                                     height: .greatestFiniteMagnitude)
         let boundingBox = text.boundingRect(with: constraintRect,
                                             options: .usesLineFragmentOrigin,
-                                            attributes: [.font: contentTxt.font],
+                                            attributes: [.font: contentTxt.font!],
                                             context: nil)
         label.frame.size = CGSize(width: ceil(boundingBox.width),
                                   height: ceil(boundingBox.height))
