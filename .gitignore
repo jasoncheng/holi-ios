@@ -28,4 +28,4 @@ xcuserdata/
 .build/
 
 # Firebase
-holi/GoogleService-Info.plist
+holi/GoogleService-Info-production.plist
